@@ -8,29 +8,75 @@
     </x-slot>
 
     <!-- begin: grid -->
+    <div class="grid_1">
+        <div class="promotion">
+            <p class="text-2xl font-semibold">{{ $promotionsCount ?? 'N/A' }}</p>
+        </div>
+        <div class="student">
+            <p class="text-2xl font-semibold">{{ $studentsCount ?? 'N/A' }}</p>
+        </div>
+    </div>
+
+    <div class="grid_2">
+        <div class="group">
+            <p class="text-2xl font-semibold">{{ $groupsCount ?? 'N/A' }}</p>
+        </div>
+        <div class="teacher">
+            <p class="text-2xl font-semibold">{{ $teachersCount ?? 'N/A' }}</p>
+        </div>
+    </div>
+
     <div class="grid lg:grid-cols-3 gap-5 lg:gap-7.5 items-stretch">
         <div class="lg:col-span-2">
             <div class="grid">
                 <div class="card card-grid h-full min-w-full">
                     <div class="card-header">
-                        <h3 class="card-title">
-                            Block 1
-                        </h3>
+                        <h3 class="card-title">Promotions</h3>
                     </div>
                     <div class="card-body flex flex-col gap-5">
-
+                        <p class="text-2xl font-semibold">{{ $promotionsCount ?? 'N/A' }}</p>
+                        <a href="{{ route('cohort.index') }}" class="text-blue-500 hover:underline">Voir les promotions</a>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="lg:col-span-1">
             <div class="card card-grid h-full min-w-full">
                 <div class="card-header">
-                    <h3 class="card-title">
-                        Block 2
-                    </h3>
+                    <h3 class="card-title">Étudiants</h3>
                 </div>
                 <div class="card-body flex flex-col gap-5">
+                    <p class="text-2xl font-semibold">{{ $studentsCount ?? 'N/A' }}</p>
+                    <a href="{{ route('student.index') }}" class="text-blue-500 hover:underline">Voir les étudiants</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-5 lg:gap-7.5 items-stretch">
+        <div class="lg:col-span-2">
+            <div class="grid">
+                <div class="card card-grid h-full min-w-full">
+                    <div class="card-header">
+                        <h3 class="card-title">Groupes</h3>
+                    </div>
+                    <div class="card-body flex flex-col gap-5">
+                        <p class="text-2xl font-semibold">{{ $groupsCount ?? 'N/A' }}</p>
+                        <a href="{{ route('group.index') }}" class="text-blue-500 hover:underline">Voir les groupes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-1">
+            <div class="card card-grid h-full min-w-full">
+                <div class="card-header">
+                    <h3 class="card-title">Enseignants</h3>
+                </div>
+                <div class="card-body flex flex-col gap-5">
+                    <p class="text-2xl font-semibold">{{ $teachersCount ?? 'N/A' }}</p>
+                    <a href="{{ route('teacher.index') }}" class="text-blue-500 hover:underline">Voir les enseignants</a>
                 </div>
             </div>
         </div>

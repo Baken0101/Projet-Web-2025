@@ -18,7 +18,6 @@
                         </h3>
                     </div>
                     <div class="card-body flex flex-col gap-5">
-
                     </div>
                 </div>
             </div>

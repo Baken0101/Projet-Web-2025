@@ -75,10 +75,10 @@ class User extends Authenticatable
     /**
      * @return (Model&object)|null
      */
-    public function school() {
-        // With this, the user can only have 1 school
+    public function schools(): BelongsToMany
+    {
         return $this->belongsToMany(School::class, 'users_schools')
             ->withPivot('role')
-            ->first();
+            ->withTimestamps();
     }
 }
