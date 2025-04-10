@@ -13,7 +13,7 @@ class CohortPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->schools()->pivot->role == 'admin';
+        return $user->schools->first()?->pivot?->role === 'admin';
     }
 
     /**

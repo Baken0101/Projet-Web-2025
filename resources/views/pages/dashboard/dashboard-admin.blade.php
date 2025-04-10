@@ -8,24 +8,6 @@
     </x-slot>
 
     <!-- begin: grid -->
-    <div class="grid_1">
-        <div class="promotion">
-            <p class="text-2xl font-semibold">{{ $promotionsCount ?? 'N/A' }}</p>
-        </div>
-        <div class="student">
-            <p class="text-2xl font-semibold">{{ $studentsCount ?? 'N/A' }}</p>
-        </div>
-    </div>
-
-    <div class="grid_2">
-        <div class="group">
-            <p class="text-2xl font-semibold">{{ $groupsCount ?? 'N/A' }}</p>
-        </div>
-        <div class="teacher">
-            <p class="text-2xl font-semibold">{{ $teachersCount ?? 'N/A' }}</p>
-        </div>
-    </div>
-
     <div class="grid lg:grid-cols-3 gap-5 lg:gap-7.5 items-stretch">
         <div class="lg:col-span-2">
             <div class="grid">
