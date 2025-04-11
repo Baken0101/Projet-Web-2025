@@ -33,7 +33,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/teachers', [TeacherController::class, 'index'])->name('teacher.index');
 
         // Students
-        Route::get('students', [StudentController::class, 'index'])->name('student.index');
+        Route::get('/students', [StudentController::class, 'index'])->name('student.index');
+        Route::get('/students/create', [StudentController::class, 'showCreateForm'])->name('student.create.form');
+        Route::post('/students', [StudentController::class, 'create'])->name('student.create');
+        Route::get('/students/{student}/edit', [StudentController::class, 'edit'])->name('student.edit');
+        Route::put('/students/{student}', [StudentController::class, 'update'])->name('student.update');
+        Route::delete('/students/{student}', [StudentController::class, 'destroy'])->name('student.destroy');
+
 
         // Knowledge
         Route::get('knowledge', [KnowledgeController::class, 'index'])->name('knowledge.index');

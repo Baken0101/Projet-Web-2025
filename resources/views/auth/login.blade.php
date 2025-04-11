@@ -15,23 +15,31 @@
             </div>
 
             <!-- Email Address -->
-            <x-forms.input label="{{ __('Email') }}" name="email"
-                           :value="old('email')" type="email" :placeholder="__('email@email.com')"
-                           :messages="$errors->get('email')"/>
+            <x-forms.input
+                :label="(string) __('Email')"
+                name="email"
+                :value="old('email')"
+                type="email"
+                :placeholder="(string) __('email@email.com')"
+                :messages="$errors->get('email')"
+            />
 
             <!-- Password -->
-            <x-forms.input label="{{ __('Password') }}" name="password" :placeholder="__('Enter Password')"
-                           :value="old('email')" type="password" :resetLink="true"
-                           :messages="$errors->get('password')"/>
+            <x-forms.input
+                :label="(string) __('Password')"
+                name="password"
+                :placeholder="(string) __('Enter Password')"
+                type="password"
+                :resetLink="true"
+                :messages="$errors->get('password')"
+            />
 
             <!-- Remember Me -->
-            <x-forms.checkbox :label="__('Remember Me')" name="remember" />
-
+            <x-forms.checkbox :label="(string) __('Remember Me')" name="remember" />
 
             <x-forms.primary-button>
                 {{ __('Log in') }}
             </x-forms.primary-button>
-
         </form>
     </div>
 </x-guest-layout>

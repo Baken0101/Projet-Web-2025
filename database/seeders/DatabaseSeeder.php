@@ -64,5 +64,6 @@ class DatabaseSeeder extends Seeder
             'school_id' => $school->id,
             'role'      => 'student'
         ]);
+        $this->call(StudentSeeder::class);
     }
 }
