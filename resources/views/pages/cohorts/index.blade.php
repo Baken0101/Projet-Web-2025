@@ -1,13 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
         <h1 class="flex items-center gap-1 text-sm font-normal">
-            <span class="text-gray-700">
-                {{ __('Promotions') }}
-            </span>
+            <span class="text-gray-700">{{ __('Promotions') }}</span>
         </h1>
     </x-slot>
 
-    <!-- begin: grid -->
     <div class="grid lg:grid-cols-3 gap-5 lg:gap-7.5 items-stretch">
         <div class="lg:col-span-2">
             <div class="grid">
@@ -16,91 +13,74 @@
                         <h3 class="card-title">Mes promotions</h3>
                     </div>
                     <div class="card-body">
-                        <div data-datatable="true" data-datatable-page-size="5">
-                            <div class="scrollable-x-auto">
-                                <table class="table table-border" data-datatable-table="true">
-                                    <thead>
+                        <div class="scrollable-x-auto">
+                            <table class="table table-border">
+                                <thead>
+                                <tr>
+                                    <th class="min-w-[280px]">Promotion</th>
+                                    <th class="min-w-[135px]">Année</th>
+                                    <th class="min-w-[135px]">Étudiants</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @forelse($cohorts as $cohort)
                                     <tr>
-                                        <th class="min-w-[280px]">
-                                            <span class="sort asc">
-                                                 <span class="sort-label">Promotion</span>
-                                                 <span class="sort-icon"></span>
-                                            </span>
-                                        </th>
-                                        <th class="min-w-[135px]">
-                                            <span class="sort">
-                                                <span class="sort-label">Année</span>
-                                                <span class="sort-icon"></span>
-                                            </span>
-                                        </th>
-                                        <th class="min-w-[135px]">
-                                            <span class="sort">
-                                                <span class="sort-label">Etudiants</span>
-                                                <span class="sort-icon"></span>
-                                            </span>
-                                        </th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
                                         <td>
                                             <div class="flex flex-col gap-2">
-                                                <a class="leading-none font-medium text-sm text-gray-900 hover:text-primary"
-                                                   href="{{ route('cohort.show', 1) }}">
-                                                    Promotion B1
-                                                </a>
+                                                @can('view', $cohort)
+                                                    <a class="leading-none font-medium text-sm text-gray-900 hover:text-primary"
+                                                       href="{{ route('cohort.show', $cohort->id) }}">
+                                                        {{ $cohort->name }}
+                                                    </a>
+                                                @else
+                                                    <span class="text-sm text-gray-600">{{ $cohort->name }}</span>
+                                                @endcan
                                                 <span class="text-2sm text-gray-700 font-normal leading-3">
-                                                    Cergy
-                                                </span>
+                                                        {{ $cohort->school->name ?? 'École inconnue' }}
+                                                    </span>
                                             </div>
                                         </td>
-                                        <td>2024-2025</td>
-                                        <td>34</td>
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($cohort->start_date)->format('Y') }}
+                                            -
+                                            {{ \Carbon\Carbon::parse($cohort->end_date)->format('Y') }}
+                                        </td>
+                                        <td>{{ $cohort->students_count }}</td>
                                     </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="card-footer justify-center md:justify-between flex-col md:flex-row gap-5 text-gray-600 text-2sm font-medium">
-                                <div class="flex items-center gap-2 order-2 md:order-1">
-                                    Show
-                                    <select class="select select-sm w-16" data-datatable-size="true" name="perpage"></select>
-                                    per page
-                                </div>
-                                <div class="flex items-center gap-4 order-1 md:order-2">
-                                    <span data-datatable-info="true"></span>
-                                    <div class="pagination" data-datatable-pagination="true"></div>
-                                </div>
-                            </div>
+                                @empty
+                                    <tr>
+                                        <td colspan="3">Aucune promotion trouvée.</td>
+                                    </tr>
+                                @endforelse
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="lg:col-span-1">
-            <div class="card h-full">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        Ajouter une promotion
-                    </h3>
-                </div>
-                <div class="card-body flex flex-col gap-5">
-                    <form method="POST" action="{{route('cohort.create')}}">
-                        @csrf
-                        <x-forms.input name="name" :label="__('Nom')" />
 
-                        <x-forms.input name="description" :label="__('Description')" />
-
-                        <x-forms.input type="date" name="start_date" :label="__('Début de l\'année')" placeholder="" />
-
-                        <x-forms.input type="date" name="end_date" :label="__('Fin de l\'année')" placeholder="" />
-
-                        <x-forms.primary-button type="submit">
-                            {{ __('Valider') }}
-                        </x-forms.primary-button>
-                    </form>
+        {{-- Formulaire visible seulement si l'utilisateur peut créer --}}
+        @can('create', App\Models\Cohort::class)
+            <div class="lg:col-span-1">
+                <div class="card h-full">
+                    <div class="card-header">
+                        <h3 class="card-title">Ajouter une promotion</h3>
+                    </div>
+                    <div class="card-body flex flex-col gap-5">
+                        <form method="POST" action="{{ route('cohort.create') }}">
+                            @csrf
+                            <x-forms.input name="name" :label="__('Nom')" />
+                            <x-forms.input name="description" :label="__('Description')" />
+                            <x-forms.input type="date" name="start_date" :label="__('Début de l\'année')" />
+                            <x-forms.input type="date" name="end_date" :label="__('Fin de l\'année')" />
+                            <x-forms.primary-button type="submit">
+                                {{ __('Valider') }}
+                            </x-forms.primary-button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
+        @endcan
     </div>
-    <!-- end: grid -->
 </x-app-layout>

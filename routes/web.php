@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/cohorts', [CohortController::class, 'index'])->name('cohort.index');
         Route::post('/cohorts-create', [CohortController::class, 'create'])->name('cohort.create');
         Route::get('/cohort/{cohort}', [CohortController::class, 'show'])->name('cohort.show');
+        Route::post('/cohort/{cohort}/add-student', [CohortController::class, 'addStudent'])->name('cohort.addStudent');
 
         // Teachers
         Route::get('/teachers', [TeacherController::class, 'index'])->name('teacher.index');
