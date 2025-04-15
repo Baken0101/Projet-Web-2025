@@ -1,39 +1,28 @@
 <x-app-layout>
-<x-slot name="header">
-        <h1 class="flex items-center gap-1 text-sm font-normal">
-            <span class="text-gray-700">
-                {{ __('Dashboard') }}
-            </span>
+    <x-slot name="header">
+        <h1 class="text-sm font-normal text-gray-700">
+            Tableau de bord - Étudiant
         </h1>
     </x-slot>
 
-    <!-- begin: grid -->
-    <div class="grid lg:grid-cols-3 gap-5 lg:gap-7.5 items-stretch">
-        <div class="lg:col-span-2">
-            <div class="grid">
-                <div class="card card-grid h-full min-w-full">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            Block 1
-                        </h3>
-                    </div>
-                    <div class="card-body flex flex-col gap-5">
-
-                    </div>
-                </div>
-            </div>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Ma formation</h3>
         </div>
-        <div class="lg:col-span-1">
-            <div class="card card-grid h-full min-w-full">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        Block 2
-                    </h3>
-                </div>
-                <div class="card-body flex flex-col gap-5">
-                </div>
-            </div>
+        <div class="card-body">
+            @php
+                $pivot = auth()->user()->schools->first()?->pivot;
+                $cohort = $pivot?->cohort_id ? \App\Models\Cohort::find($pivot->cohort_id) : null;
+            @endphp
+
+            @if($cohort)
+                <p>Vous êtes inscrit à la promotion : <strong>{{ $cohort->name }}</strong></p>
+                <a href="{{ route('cohort.show', $cohort->id) }}" class="text-blue-500 hover:underline">
+                    Voir la promotion
+                </a>
+            @else
+                <p class="text-sm text-gray-500">Aucune promotion associée.</p>
+            @endif
         </div>
     </div>
-    <!-- end: grid -->
 </x-app-layout>

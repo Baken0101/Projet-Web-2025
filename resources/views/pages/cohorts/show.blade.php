@@ -2,14 +2,19 @@
     <x-slot name="header">
         <h1 class="flex items-center gap-1 text-sm font-normal">
             <span class="text-gray-700">{{ $cohort->name }}</span>
+            <span class="ml-2 text-sm text-gray-500">(Responsable : {{ $cohort->teacher?->full_name ?? 'non assigné' }})</span>
         </h1>
     </x-slot>
+
 
     <div class="grid lg:grid-cols-3 gap-5 lg:gap-7.5 items-stretch">
         {{-- Liste des étudiants --}}
         <div class="lg:col-span-2">
             <div class="card card-grid h-full min-w-full">
                 <div class="card-header">
+                    @if (session('success'))
+                        <x-auth-session-status :status="session('success')" class="mb-4" />
+                    @endif
                     <h3 class="card-title">Étudiants</h3>
                 </div>
                 <div class="card-body">

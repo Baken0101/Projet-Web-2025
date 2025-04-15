@@ -34,4 +34,10 @@ class Cohort extends Model
     {
         return $this->belongsTo(\App\Models\School::class);
     }
+
+    public function teacher()
+    {
+        return $this->belongsTo(User::class, 'teacher_id');
+    }
+
 }

@@ -61,4 +61,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserSchool::class);
     }
+
+    public function teachingCohorts()
+    {
+        return $this->hasMany(Cohort::class, 'teacher_id');
+    }
 }
