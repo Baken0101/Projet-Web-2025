@@ -1,23 +1,24 @@
+{{-- Hérite du layout ci‑dessus --}}
 <x-app-layout>
     <x-slot name="header">
-        <h1 class="flex items-center gap-1 text-sm font-normal">
-            <span class="text-gray-700">{{ __('Étudiants') }}</span>
-        </h1>
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Étudiants') }}
+        </h2>
     </x-slot>
 
     @if (session('success'))
         <x-auth-session-status :status="session('success')" class="mb-4" />
     @endif
 
-    <div class="grid lg:grid-cols-3 gap-5 lg:gap-7.5 items-stretch">
-        {{-- Liste des étudiants --}}
+    <div class="grid lg:grid-cols-3 gap-5 lg:gap-7.5 items-stretch p-6">
+        {{-- 1. Liste des étudiants --}}
         <div class="lg:col-span-2">
             <div class="card card-grid h-full min-w-full">
-                <div class="card-header">
+                <div class="card-header flex items-center justify-between">
                     <h3 class="card-title">Liste des étudiants</h3>
                     <div class="input input-sm max-w-48">
                         <i class="ki-filled ki-magnifier"></i>
-                        <input placeholder="Rechercher un étudiant" type="text" />
+                        <input id="student-search" placeholder="Rechercher un étudiant" type="text" class="px-2 py-1 border rounded"/>
                     </div>
                 </div>
                 <div class="card-body">
@@ -40,7 +41,7 @@
                                         <td>{{ \Carbon\Carbon::parse($student->birth_date)->format('d/m/Y') }}</td>
                                         <td class="text-center flex items-center justify-center gap-2">
                                             @can('update', $student)
-                                                {{-- On passe $cohorts à la modale --}}
+                                                {{-- Modal d’édition --}}
                                                 <x-modals.student-edit :student="$student" :cohorts="$cohorts" />
                                             @endcan
 
@@ -57,14 +58,17 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="4" class="text-center text-gray-500">Aucun étudiant trouvé.</td>
+                                        <td colspan="4" class="text-center text-gray-500">
+                                            Aucun étudiant trouvé.
+                                        </td>
                                     </tr>
                                 @endforelse
                                 </tbody>
                             </table>
                         </div>
 
-                        <div class="card-footer justify-center md:justify-between flex-col md:flex-row gap-5 text-gray-600 text-2sm font-medium">
+                        {{-- Pagination --}}
+                        <div class="card-footer justify-center md:justify-between flex-col md:flex-row gap-5 text-gray-600 text-sm font-medium">
                             <div class="flex items-center gap-2 order-2 md:order-1">
                                 Show
                                 <select class="select select-sm w-16" data-datatable-size="true" name="perpage"></select>
@@ -80,7 +84,7 @@
             </div>
         </div>
 
-        {{-- Formulaire d’ajout d’un étudiant --}}
+        {{-- 2. Formulaire d’ajout --}}
         @can('create', App\Models\User::class)
             <div class="lg:col-span-1">
                 <div class="card h-full">
@@ -110,4 +114,21 @@
             </div>
         @endcan
     </div>
+
+    {{-- Live‑search pour filtrer en JS --}}
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const input = document.getElementById('student-search');
+                const rows  = document.querySelectorAll('table tbody tr');
+                input.addEventListener('input', () => {
+                    const term = input.value.toLowerCase();
+                    rows.forEach(r => {
+                        r.style.display = r.textContent.toLowerCase().includes(term) ? '' : 'none';
+                    });
+                });
+            });
+        </script>
+    @endpush
+
 </x-app-layout>

@@ -1,62 +1,85 @@
-@props(['cohort'])
+@props(['cohort','teachers'])
 
-<div x-data="{ open: false }">
-    <button type="button" @click="open = true" class="text-blue-600 hover:underline text-sm">Modifier</button>
+<!-- Modal EDIT Promotion -->
+<div id="promoEditModal-{{ $cohort->id }}" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="promo-edit-form-{{ $cohort->id }}"
+              action="{{ route('cohort.update.ajax', $cohort) }}"
+              method="POST"
+              class="modal-content">
+            @csrf
 
-    <div x-show="open" x-cloak class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
-        <div class="bg-white rounded-lg shadow-lg w-[400px] p-6">
-            <h2 class="text-lg font-semibold mb-4">Modifier la promotion</h2>
+            <div class="modal-header">
+                <h5 class="modal-title">Modifier la promotion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
 
-            <form @submit.prevent="submitForm">
-                @csrf
-                <input type="hidden" name="id" value="{{ $cohort->id }}">
-
-                <x-forms.input name="name" :value="$cohort->name" label="Nom" />
-                <x-forms.input name="description" :value="$cohort->description" label="Description" />
-                <x-forms.input type="date" name="start_date" :value="\Carbon\Carbon::parse($cohort->start_date)->format('Y-m-d')" label="Début" />
-                <x-forms.input type="date" name="end_date" :value="\Carbon\Carbon::parse($cohort->end_date)->format('Y-m-d')" label="Fin" />
-
-                {{-- Affectation professeur --}}
-                <x-forms.select-searchable
-                    name="teacher_id"
-                    label="Professeur"
-                    :options="$teachers"
-                    optionValue="id"
-                    optionLabel="full_name"
-                    :selected="$cohort->teacher_id"
-                />
-
-                <div class="flex justify-end mt-4 gap-2">
-                    <button type="button" class="btn btn-secondary" @click="open = false">Annuler</button>
-                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <div class="modal-body space-y-4">
+                <div>
+                    <label for="name-{{ $cohort->id }}" class="block text-sm font-medium">Nom</label>
+                    <input type="text"
+                           id="name-{{ $cohort->id }}"
+                           name="name"
+                           value="{{ old('name',$cohort->name) }}"
+                           class="w-full px-3 py-2 border rounded"
+                           required>
                 </div>
-            </form>
-        </div>
+
+                <div>
+                    <label for="description-{{ $cohort->id }}" class="block text-sm font-medium">Description</label>
+                    <textarea id="description-{{ $cohort->id }}"
+                              name="description"
+                              rows="3"
+                              class="w-full px-3 py-2 border rounded">{{ old('description',$cohort->description) }}</textarea>
+                </div>
+
+                <div>
+                    <label for="start_date-{{ $cohort->id }}" class="block text-sm font-medium">Début</label>
+                    <input type="date"
+                           id="start_date-{{ $cohort->id }}"
+                           name="start_date"
+                           value="{{ old('start_date',$cohort->start_date) }}"
+                           class="w-full px-3 py-2 border rounded"
+                           required>
+                </div>
+
+                <div>
+                    <label for="end_date-{{ $cohort->id }}" class="block text-sm font-medium">Fin</label>
+                    <input type="date"
+                           id="end_date-{{ $cohort->id }}"
+                           name="end_date"
+                           value="{{ old('end_date',$cohort->end_date) }}"
+                           class="w-full px-3 py-2 border rounded"
+                           required>
+                </div>
+
+                <div>
+                    <label for="teacher_id-{{ $cohort->id }}" class="block text-sm font-medium">Professeur</label>
+                    <select id="teacher_id-{{ $cohort->id }}"
+                            name="teacher_id"
+                            class="w-full px-3 py-2 border rounded">
+                        <option value="">— Aucun —</option>
+                        @foreach($teachers as $t)
+                            <option value="{{ $t->id }}"
+                                {{ old('teacher_id',$cohort->teacher_id)==$t->id ? 'selected':'' }}>
+                                {{ $t->first_name }} {{ $t->last_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    Annuler
+                </button>
+                <button type="submit"
+                        class="btn btn-primary">
+                    Enregistrer
+                </button>
+            </div>
+        </form>
     </div>
-
-    <script>
-        function submitForm(e) {
-            const form = e.target.closest('form');
-            const cohortId = form.querySelector('input[name="id"]').value;
-            const formData = new FormData(form);
-
-            fetch(`/cohort/${cohortId}/edit`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json'
-                },
-                body: formData
-            })
-                .then(response => response.json())
-                .then(data => {
-                    alert(data.message || "Mise à jour réussie.");
-                    location.reload();
-                })
-                .catch(error => {
-                    console.error(error);
-                    alert("Une erreur s’est produite.");
-                });
-        }
-    </script>
 </div>

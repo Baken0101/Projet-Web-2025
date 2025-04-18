@@ -2,114 +2,96 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Student;
 use App\Models\Cohort;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Contracts\View\View;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Foundation\Application;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class StudentController extends Controller
 {
-    use AuthorizesRequests;
-
     /**
-     * Affiche la liste des étudiants autorisés
+     * Display a paginated listing of students.
      */
-    public function index(): View|Factory|Application
+    public function index()
     {
-        $this->authorize('viewAny', User::class);
+        // Retrieve students with pagination
+        $students = User::orderBy('last_name')
+            ->paginate(5);  // paginate 5 per page
 
-        $students = User::whereHas('schools', function ($query) {
-            $query->where('users_schools.role', 'student');
-        })->get();
+        // Needed for edit-modal or select-searchable
+        $cohorts = Cohort::orderBy('name')->get();
 
-        $cohorts = Cohort::all();
-
+        // Note: view path corrected to pages.students.index
         return view('pages.students.index', compact('students', 'cohorts'));
     }
 
     /**
-     * Affiche le formulaire de création d’un étudiant
+     * Show the form for creating a new student.
      */
-    public function showCreateForm(): View|Factory|Application
+    public function showCreateForm()
     {
-        $this->authorize('create', User::class);
+        $cohorts = Cohort::orderBy('name')->get();
 
-        $cohorts = Cohort::all();
+        // Note: view path corrected to pages.students.create (à créer)
         return view('pages.students.create', compact('cohorts'));
     }
 
     /**
-     * Crée un nouvel étudiant
+     * Store a newly created student in storage.
      */
     public function create(Request $request)
     {
-        $this->authorize('create', User::class);
-
-        $validated = $request->validate([
+        $data = $request->validate([
             'last_name'   => 'required|string|max:255',
             'first_name'  => 'required|string|max:255',
-            'email'       => 'required|email|unique:users,email',
             'birth_date'  => 'required|date',
+            'email'       => 'required|email|unique:students,email',
             'cohort_id'   => 'required|exists:cohorts,id',
         ]);
 
-        $user = User::create([
-            'last_name'   => $validated['last_name'],
-            'first_name'  => $validated['first_name'],
-            'email'       => $validated['email'],
-            'birth_date'  => $validated['birth_date'],
-            'password'    => bcrypt(\Carbon\Carbon::parse($validated['birth_date'])->format('d/m/Y')),
-        ]);
+        User::create($data);
 
-        $cohort = Cohort::find($validated['cohort_id']);
-        $user->schools()->attach($cohort->school_id, ['role' => 'student', 'cohort_id' => $cohort->id]);
-
-        return redirect()->route('student.index')->with('success', 'Étudiant créé avec succès.');
+        return redirect()
+            ->route('student.index')
+            ->with('success', 'Étudiant créé avec succès.');
     }
 
     /**
-     * Affiche le formulaire de modification
+     * Show the form for editing the specified student.
      */
-    public function edit(User $student): View|Factory|Application
+    public function edit(Student $student)
     {
-        $this->authorize('update', $student);
-
-        $cohorts = Cohort::all();
+        $cohorts = Cohort::orderBy('name')->get();
         return view('pages.students.edit', compact('student', 'cohorts'));
     }
 
     /**
-     * Met à jour les données d’un étudiant
+     * Update the specified student in storage.
      */
-    public function update(Request $request, User $student)
+    public function update(Request $request, Student $student)
     {
-        $this->authorize('update', $student);
-
-        $validated = $request->validate([
+        $data = $request->validate([
             'last_name'   => 'required|string|max:255',
             'first_name'  => 'required|string|max:255',
-            'email'       => 'required|email|unique:users,email,' . $student->id,
             'birth_date'  => 'required|date',
+            'email'       => "required|email|unique:students,email,{$student->id}",
             'cohort_id'   => 'required|exists:cohorts,id',
         ]);
 
-        $student->update($validated);
+        $student->update($data);
 
-        return redirect()->route('student.index')->with('success', 'Étudiant mis à jour.');
+        return redirect()
+            ->route('student.index')
+            ->with('success', 'Étudiant mis à jour avec succès.');
     }
 
     /**
-     * Supprime un étudiant
+     * Remove the specified student from storage.
      */
-    public function destroy(User $student)
+    public function destroy(Student $student)
     {
-        $this->authorize('delete', $student);
-
         $student->delete();
 
-        return redirect()->route('student.index')->with('success', 'Étudiant supprimé.');
+        return back()->with('success', 'Étudiant supprimé.');
     }
 }

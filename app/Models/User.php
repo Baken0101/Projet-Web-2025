@@ -49,8 +49,13 @@ class User extends Authenticatable
      */
     public function schools(): BelongsToMany
     {
-        return $this->belongsToMany(School::class, 'users_schools')
-            ->withPivot(['role','cohort_id'])
+        return $this->belongsToMany(
+            School::class,
+            'users_schools',
+            'user_id',
+            'school_id'
+        )
+            ->withPivot('role', 'cohort_id')
             ->withTimestamps();
     }
 

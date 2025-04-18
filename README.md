@@ -98,3 +98,11 @@ npm run dev
 - 🧠 Génération automatique de QCM par langage sélectionné
 - ✅ Système de Kanban pour les rétrospectives
 - 📈 Statistiques d’usage et suivi pédagogique
+
+
+Ce que j'ai fais : 
+
+gloabalement gestion pour les formations, user et proffesseurs. Mais j'ai eu pas
+mal de problèmes et j'ai essayer de rattraper comme je pouvais car je suis malade
+depuis quelques jours et j'ai beaucoup de mal a travailler. Désolé ça va pas être 
+facile a corrigé... Merci pour le projet Thibault
