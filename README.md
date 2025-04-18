@@ -100,9 +100,13 @@ npm run dev
 - 📈 Statistiques d’usage et suivi pédagogique
 
 
-Ce que j'ai fais : 
+Ce que j’ai fait :
 
-gloabalement gestion pour les formations, user et proffesseurs. Mais j'ai eu pas
-mal de problèmes et j'ai essayer de rattraper comme je pouvais car je suis malade
-depuis quelques jours et j'ai beaucoup de mal a travailler. Désolé ça va pas être 
-facile a corrigé... Merci pour le projet Thibault
+Globalement, j’ai assuré la gestion des formations, 
+des utilisateurs et des professeurs. J’ai cependant 
+rencontré pas mal de problèmes ; j’ai essayé de 
+rattraper ce que je pouvais, mais je suis malade depuis quelques jours
+et j’ai beaucoup de mal à travailler. Certaines fonctionnalités qui 
+*marchaient auparavant (comme la modification ou la suppression 
+d’éléments dans les tableaux) ne fonctionnent plus pour l’instant. 
+Désolé, ça ne va pas être facile à corriger… Merci pour le projet, Thibault.
