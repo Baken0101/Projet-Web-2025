@@ -110,3 +110,5 @@ et j’ai beaucoup de mal à travailler. Certaines fonctionnalités qui
 *marchaient auparavant (comme la modification ou la suppression 
 d’éléments dans les tableaux) ne fonctionnent plus pour l’instant. 
 Désolé, ça ne va pas être facile à corriger… Merci pour le projet, Thibault.
+
+j'ai aussi pas pu mettre le pojet au propre et les commentaires partout.
